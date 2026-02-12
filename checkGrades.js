@@ -40,6 +40,12 @@ const player = require("play-sound")();
 const telegramBot = require("node-telegram-bot-api");
 require("dotenv").config();
 
+const CHECK_INTERVAL_MINUTES = 3;
+const ALERT_SOUND_PATH = "./assets/goose-urgent.wav";
+const USER_AGENT =
+  "Mozilla/5.0 (X11; Linux x86_64; rv:146.0) Gecko/20100101 Firefox/146.0";
+const REQUEST_TIMEOUT_MS = 10000; // 10 seconds
+
 const courses = [
   {
     name: "DSP",
@@ -171,13 +177,13 @@ async function checkCourse(course) {
   try {
     const headers = {
       // so we don't get blocked by basic anti-bot measures (like universities would have ones ahahaha their servers are broken anyway)
-      "User-Agent":
-        "Mozilla/5.0 (X11; Linux x86_64; rv:146.0) Gecko/20100101 Firefox/146.0",
+      "User-Agent": USER_AGENT,
     };
 
     const { data } = await axios.get(course.url, {
-      headers,
+      headers: headers,
       httpsAgent: agent,
+      timeout: REQUEST_TIMEOUT_MS,
     });
 
     const $ = cheerio.load(data);
@@ -189,7 +195,7 @@ async function checkCourse(course) {
       console.log(`🚨 ${course.name} PAGE CHANGED!!!!!`);
       process.stdout.write("\x07"); // terminal beep, not always reliable so we have:
 
-      player.play("./assets/goose-urgent.wav", (err) => {
+      player.play(ALERT_SOUND_PATH, (err) => {
         // inspired by our beloved glucose goose app
         if (err) console.log("Error playing sound:", err);
       });
@@ -211,7 +217,7 @@ async function checkCourse(course) {
   }
 }
 
-cron.schedule("*/3 * * * *", async () => {
+cron.schedule(`*/${CHECK_INTERVAL_MINUTES} * * * *`, async () => {
   for (const course of courses) {
     await checkCourse(course);
   }
