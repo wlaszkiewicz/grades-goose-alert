@@ -1,0 +1,27 @@
+{
+  "name": "grades-goose-alert",
+  "version": "1.0.0",
+  "description": "",
+  "main": "checkGrades.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wlaszkiewicz/grades-goose-alert.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/wlaszkiewicz/grades-goose-alert/issues"
+  },
+  "homepage": "https://github.com/wlaszkiewicz/grades-goose-alert#readme",
+  "dependencies": {
+    "axios": "^1.13.5",
+    "cheerio": "^1.2.0",
+    "node-cron": "^4.2.1",
+    "play-sound": "^1.1.6"
+  }
+}
